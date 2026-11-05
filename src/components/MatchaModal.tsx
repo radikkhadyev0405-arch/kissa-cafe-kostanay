@@ -2,18 +2,21 @@ import { useState } from 'react';
 import { Plus } from 'lucide-react';
 import { Modal } from './Modal';
 import { useCart } from '../context/CartContext';
+import { useI18n } from '../context/I18nContext';
+import type { LocalizedText } from '../data/menu';
 
 interface MatchaModalProps {
   open: boolean;
   onClose: () => void;
   drinkId: string;
-  drinkName: string;
+  drinkName: LocalizedText;
   price: number;
 }
 
 type Variant = 'cold' | 'hot';
 
 export function MatchaModal({ open, onClose, drinkId, drinkName, price }: MatchaModalProps) {
+  const { t } = useI18n();
   const { addItem } = useCart();
   const [variant, setVariant] = useState<Variant | null>(null);
 
@@ -25,26 +28,32 @@ export function MatchaModal({ open, onClose, drinkId, drinkName, price }: Matcha
   const handleAdd = () => {
     if (!variant) return;
     const isCold = variant === 'cold';
-    const details = isCold ? 'холодная 500 мл' : 'горячая 350 мл';
+    const details: LocalizedText = isCold
+      ? { ru: 'холодная 500 мл', kk: 'салқын 500 мл', en: 'cold 500 ml' }
+      : { ru: 'горячая 350 мл', kk: 'ыстық 350 мл', en: 'hot 350 ml' };
     addItem({
       key: `${drinkId}-${variant}`,
       type: 'drink',
       name: drinkName,
       details,
+      ruName: drinkName.ru,
+      ruDetails: isCold ? 'холодная 500 мл' : 'горячая 350 мл',
       price,
     });
     handleClose();
   };
 
+  const options = [
+    { id: 'cold' as Variant, label: t.matcha.cold, volume: t.matcha.coldVolume },
+    { id: 'hot' as Variant, label: t.matcha.hot, volume: t.matcha.hotVolume },
+  ];
+
   return (
-    <Modal open={open} onClose={handleClose} title={drinkName}>
-      <p className="mb-4 text-sm text-kissa-olive">Выбери вариант напитка. Цена одинаковая.</p>
+    <Modal open={open} onClose={handleClose} title={drinkName.ru}>
+      <p className="mb-4 text-sm text-kissa-olive">{t.matcha.chooseVariant}. {t.matcha.samePrice}</p>
 
       <div className="grid grid-cols-2 gap-3">
-        {[
-          { id: 'cold' as Variant, label: 'Холодная', volume: '500 мл' },
-          { id: 'hot' as Variant, label: 'Горячая', volume: '350 мл' },
-        ].map((opt) => {
+        {options.map((opt) => {
           const selected = variant === opt.id;
           return (
             <button
@@ -74,7 +83,7 @@ export function MatchaModal({ open, onClose, drinkId, drinkName, price }: Matcha
         }`}
       >
         <Plus size={18} strokeWidth={3} />
-        Добавить в корзину · {price} ₸
+        {t.matcha.addToCart} · {price} ₸
       </button>
     </Modal>
   );

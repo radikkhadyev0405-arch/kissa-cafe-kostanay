@@ -4,26 +4,32 @@ import { SmartImage } from './SmartImage';
 import { Starfish } from './Decor';
 import { MatchaModal } from './MatchaModal';
 import { useCart } from '../context/CartContext';
-import { drinkCategories, type DrinkItem } from '../data/menu';
+import { useI18n } from '../context/I18nContext';
+import { drinkCategories, type DrinkItem, type LocalizedText } from '../data/menu';
+import { loc } from '../utils/cart';
 
 export function DrinksMenu() {
+  const { t, locale } = useI18n();
   const { addItem } = useCart();
   const [active, setActive] = useState(drinkCategories[0].id);
-  const [matchaItem, setMatchaItem] = useState<{ id: string; name: string; price: number } | null>(null);
+  const [matchaItem, setMatchaItem] = useState<{ id: string; name: LocalizedText; price: number } | null>(null);
 
   const current = drinkCategories.find((c) => c.id === active)!;
 
-  const handleAdd = (catId: string, item: { id: string; name: string; price: number }) => {
+  const handleAdd = (catId: string, item: { id: string; name: LocalizedText; price: number }) => {
     if (catId === 'matcha') {
       setMatchaItem({ id: item.id, name: item.name, price: item.price });
       return;
     }
-    const volume = catId === 'coffee' || catId === 'tea' ? '350 мл' : '500 мл';
+    const cat = drinkCategories.find((c) => c.id === catId)!;
+    const volume: LocalizedText = cat.volume;
     addItem({
       key: `drink-${item.id}`,
       type: 'drink',
       name: item.name,
       details: volume,
+      ruName: item.name.ru,
+      ruDetails: volume.ru,
       price: item.price,
     });
   };
@@ -35,10 +41,10 @@ export function DrinksMenu() {
       <div className="relative mx-auto max-w-5xl">
         <div className="text-center">
           <span className="inline-block rounded-full bg-kissa-lime px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-kissa-green">
-            Меню напитков
+            {t.drinks.sectionLabel}
           </span>
           <h2 className="mt-4 font-display text-3xl font-black uppercase text-kissa-green sm:text-4xl lg:text-5xl">
-            Выбери свой напиток
+            {t.drinks.heading}
           </h2>
         </div>
 
@@ -54,13 +60,13 @@ export function DrinksMenu() {
               }`}
               aria-pressed={active === cat.id}
             >
-              {cat.label}
+              {cat.label[locale]}
             </button>
           ))}
         </div>
 
         <p className="mt-4 text-center text-sm font-semibold text-kissa-olive">
-          {current.volume}
+          {current.volume[locale]}
         </p>
 
         <div key={active} className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -72,16 +78,16 @@ export function DrinksMenu() {
             >
               <SmartImage
                 src={item.image}
-                alt={item.name}
+                alt={loc(item.name, locale)}
                 className="h-24 w-24 flex-shrink-0 rounded-2xl object-cover"
               />
               <div className="flex flex-1 flex-col justify-between">
                 <div>
                   <h3 className="font-display text-base font-extrabold leading-tight text-kissa-green sm:text-lg">
-                    {item.name}
+                    {loc(item.name, locale)}
                   </h3>
                   <p className="mt-1 text-xs font-semibold text-kissa-olive">
-                    {item.kcal} ккал
+                    {item.kcal} {t.drinks.kcal}
                   </p>
                 </div>
                 <div className="flex items-center justify-between gap-2">
@@ -91,10 +97,10 @@ export function DrinksMenu() {
                   <button
                     onClick={() => handleAdd(active, item)}
                     className="flex items-center gap-1 rounded-full bg-kissa-pink px-3 py-1.5 text-xs font-bold text-white transition-transform hover:scale-105 active:scale-95"
-                    aria-label={`Добавить в корзину: ${item.name}`}
+                    aria-label={`${t.drinks.addToCart}: ${loc(item.name, locale)}`}
                   >
                     <Plus size={14} strokeWidth={3} />
-                    В корзину
+                    {t.drinks.addToCart}
                   </button>
                 </div>
               </div>

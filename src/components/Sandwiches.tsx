@@ -2,18 +2,29 @@ import { Plus } from 'lucide-react';
 import { SmartImage } from './SmartImage';
 import { Daisy } from './Decor';
 import { useCart } from '../context/CartContext';
-import { sandwiches } from '../data/menu';
+import { useI18n } from '../context/I18nContext';
+import { sandwiches, type LocalizedText } from '../data/menu';
 import { formatMacrosGrams } from '../utils/macros';
+import { loc } from '../utils/cart';
 
 export function Sandwiches() {
+  const { t, locale } = useI18n();
   const { addItem } = useCart();
 
-  const handleAdd = (s: { id: string; name: string; price: number }) => {
+  const handleAdd = (s: { id: string; name: LocalizedText; price: number }) => {
+    const cartName: LocalizedText = {
+      ru: `Сэндвич: ${s.name.ru}`,
+      kk: `Сэндвич: ${s.name.kk}`,
+      en: `Sandwich: ${s.name.en}`,
+    };
+    const cartDetails: LocalizedText = { ru: 'сэндвич', kk: 'сэндвич', en: 'sandwich' };
     addItem({
       key: `sandwich-${s.id}`,
       type: 'sandwich',
-      name: `Сэндвич: ${s.name}`,
-      details: 'сэндвич',
+      name: cartName,
+      details: cartDetails,
+      ruName: `Сэндвич: ${s.name.ru}`,
+      ruDetails: 'сэндвич',
       price: s.price,
     });
   };
@@ -26,10 +37,10 @@ export function Sandwiches() {
       <div className="relative mx-auto max-w-5xl">
         <div className="text-center">
           <span className="inline-block rounded-full bg-kissa-lime px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-kissa-green">
-            Сэндвичи
+            {t.sandwiches.sectionLabel}
           </span>
           <h2 className="mt-4 font-display text-3xl font-black uppercase text-kissa-green sm:text-4xl lg:text-5xl">
-            Свежие сэндвичи
+            {t.sandwiches.heading}
           </h2>
         </div>
 
@@ -43,27 +54,27 @@ export function Sandwiches() {
               <div className="relative overflow-hidden">
                 <SmartImage
                   src={s.image}
-                  alt={s.name}
+                  alt={loc(s.name, locale)}
                   className="aspect-[4/3] w-full object-cover transition-transform duration-500 group-hover:scale-110"
                 />
                 <span className="absolute left-3 top-3 rounded-full bg-kissa-pink px-3 py-1 text-xs font-bold uppercase text-white shadow-kissa">
-                  {s.tag}
+                  {t.tags[s.tag]}
                 </span>
               </div>
               <div className="p-5">
-                <h3 className="font-display text-lg font-extrabold uppercase text-kissa-green">{s.name}</h3>
+                <h3 className="font-display text-lg font-extrabold uppercase text-kissa-green">{loc(s.name, locale)}</h3>
                 <p className="mt-1 text-xs font-semibold text-kissa-olive">
-                  {formatMacrosGrams(s.macros)}
+                  {formatMacrosGrams(s.macros, locale)}
                 </p>
                 <div className="mt-3 flex items-center justify-between gap-2">
                   <p className="font-display text-2xl font-black text-kissa-pink">{s.price} ₸</p>
                   <button
                     onClick={() => handleAdd(s)}
                     className="flex items-center gap-1 rounded-full bg-kissa-pink px-4 py-2 text-sm font-bold text-white transition-transform hover:scale-105 active:scale-95"
-                    aria-label={`Добавить в корзину: ${s.name}`}
+                    aria-label={`${t.sandwiches.addToCart}: ${loc(s.name, locale)}`}
                   >
                     <Plus size={16} strokeWidth={3} />
-                    В корзину
+                    {t.sandwiches.addToCart}
                   </button>
                 </div>
               </div>

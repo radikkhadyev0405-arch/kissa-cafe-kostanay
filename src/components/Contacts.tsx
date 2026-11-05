@@ -2,8 +2,10 @@ import { Clock, MapPin, MessageCircle, Instagram, Navigation } from 'lucide-reac
 import { Starfish } from './Decor';
 import { SmartImage } from './SmartImage';
 import { cafeInfo } from '../data/menu';
+import { useI18n } from '../context/I18nContext';
 
 export function Contacts() {
+  const { t, locale } = useI18n();
   const whatsappLink = `https://wa.me/${cafeInfo.whatsapp}?text=${encodeURIComponent('Здравствуйте! Хочу сделать заказ в KISSA')}`;
 
   return (
@@ -13,10 +15,10 @@ export function Contacts() {
       <div className="relative mx-auto max-w-5xl">
         <div className="text-center">
           <span className="inline-block rounded-full bg-kissa-lime px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-kissa-green">
-            Контакты
+            {t.contacts.sectionLabel}
           </span>
           <h2 className="mt-4 font-display text-3xl font-black uppercase text-kissa-green sm:text-4xl lg:text-5xl">
-            Ждём тебя в KISSA
+            {t.contacts.heading}
           </h2>
         </div>
 
@@ -27,8 +29,8 @@ export function Contacts() {
                 <Clock size={22} />
               </span>
               <div>
-                <p className="font-display text-sm font-extrabold uppercase text-kissa-olive">Режим работы</p>
-                <p className="text-lg font-bold text-kissa-green">{cafeInfo.hours}</p>
+                <p className="font-display text-sm font-extrabold uppercase text-kissa-olive">{t.contacts.hours}</p>
+                <p className="text-lg font-bold text-kissa-green">{cafeInfo.hours[locale]}</p>
               </div>
             </div>
 
@@ -37,8 +39,8 @@ export function Contacts() {
                 <MapPin size={22} />
               </span>
               <div>
-                <p className="font-display text-sm font-extrabold uppercase text-kissa-olive">Адрес</p>
-                <p className="text-lg font-bold text-kissa-green">{cafeInfo.address}</p>
+                <p className="font-display text-sm font-extrabold uppercase text-kissa-olive">{t.contacts.address}</p>
+                <p className="text-lg font-bold text-kissa-green">{cafeInfo.address[locale]}</p>
               </div>
             </div>
 
@@ -64,13 +66,13 @@ export function Contacts() {
             </div>
 
             <p className="text-center text-sm font-semibold text-kissa-olive">
-              Телефон: <a href={`tel:${cafeInfo.whatsapp}`} className="text-kissa-pink hover:underline">{cafeInfo.phone}</a>
+              {t.contacts.phone}: <a href={`tel:${cafeInfo.whatsapp}`} className="text-kissa-pink hover:underline">{cafeInfo.phone}</a>
             </p>
 
             <div className="overflow-hidden rounded-kissa shadow-kissa">
               <SmartImage
                 src="/images/interior.jpg"
-                alt="Интерьер кофейни KISSA"
+                alt={locale === 'ru' ? 'Интерьер кофейни KISSA' : locale === 'kk' ? 'KISSA кофейнясының интерьері' : 'KISSA coffee shop interior'}
                 className="h-40 w-full object-cover"
               />
             </div>
@@ -83,8 +85,8 @@ export function Contacts() {
                 <Navigation size={22} />
               </span>
               <div>
-                <p className="font-display text-lg font-extrabold uppercase text-kissa-green">Как нас найти</p>
-                <p className="text-sm text-kissa-olive">{cafeInfo.address}</p>
+                <p className="font-display text-lg font-extrabold uppercase text-kissa-green">{t.contacts.howToFind}</p>
+                <p className="text-sm text-kissa-olive">{cafeInfo.address[locale]}</p>
               </div>
             </div>
 
@@ -94,7 +96,7 @@ export function Contacts() {
                 <p className="mt-3 font-display text-sm font-extrabold uppercase text-kissa-green">
                   {cafeInfo.addressShort}
                 </p>
-                <p className="mt-1 text-xs text-kissa-olive">Костанай, Казахстан</p>
+                <p className="mt-1 text-xs text-kissa-olive">{locale === 'ru' ? 'Костанай, Казахстан' : locale === 'kk' ? 'Қостанай, Қазақстан' : 'Kostanay, Kazakhstan'}</p>
               </div>
             </div>
 
@@ -105,7 +107,7 @@ export function Contacts() {
               className="flex w-full items-center justify-center gap-2 rounded-full bg-kissa-green py-3.5 font-bold text-white shadow-kissa transition-transform hover:scale-105 active:scale-95"
             >
               <Navigation size={18} />
-              Открыть в 2ГИС
+              {t.contacts.openIn2gis}
             </a>
           </div>
         </div>

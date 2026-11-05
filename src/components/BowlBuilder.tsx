@@ -3,10 +3,13 @@ import { Check, Sparkles, ShoppingCart } from 'lucide-react';
 import { SmartImage } from './SmartImage';
 import { Daisy, Starfish } from './Decor';
 import { useCart } from '../context/CartContext';
-import { bowlBuilder, cafeInfo } from '../data/menu';
+import { useI18n } from '../context/I18nContext';
+import { bowlBuilder, cafeInfo, type LocalizedText } from '../data/menu';
 import { formatMacros, sumMacros } from '../utils/macros';
+import { loc } from '../utils/cart';
 
 export function BowlBuilder() {
+  const { t, locale } = useI18n();
   const { addItem } = useCart();
   const [baseId, setBaseId] = useState<string | null>(null);
   const [fillers, setFillers] = useState<string[]>([]);
@@ -25,34 +28,34 @@ export function BowlBuilder() {
     );
   };
 
-  const bowlDetails = useMemo(() => {
-    const parts: string[] = [];
-    if (base) parts.push(base.name.toLowerCase());
-    selectedFillers.forEach((f) => parts.push(f.name.toLowerCase()));
-    if (sauce) parts.push(sauce.name.toLowerCase());
-    parts.push(withTopping ? 'с посыпкой' : 'без посыпки');
-    return parts.join(', ');
-  }, [base, selectedFillers, sauce, withTopping]);
+  const bowlDetails = useMemo((): LocalizedText => {
+    const build = (lang: 'ru' | 'kk' | 'en'): string => {
+      const parts: string[] = [];
+      if (base) parts.push(base.name[lang].toLowerCase());
+      selectedFillers.forEach((f) => parts.push(f.name[lang].toLowerCase()));
+      if (sauce) parts.push(sauce.name[lang].toLowerCase());
+      parts.push(withTopping ? t.bowl.withToppingShort : t.bowl.withoutToppingShort);
+      return parts.join(', ');
+    };
+    return { ru: build('ru'), kk: build('kk'), en: build('en') };
+  }, [base, selectedFillers, sauce, withTopping, t]);
 
   const bowlMacros = useMemo(() => {
     if (!base) return null;
-    const items = [
-      base.macros,
-      ...selectedFillers.map((f) => f.macros),
-      sauce?.macros,
-    ];
+    const items = [base.macros, ...selectedFillers.map((f) => f.macros), sauce?.macros];
     return sumMacros(items);
   }, [base, selectedFillers, sauce]);
 
-  const bowlName = 'Боул';
-
   const handleAddToCart = () => {
     if (!base) return;
+    const bowlName: LocalizedText = { ru: 'Боул', kk: 'Боул', en: 'Bowl' };
     addItem({
       key: `bowl-${base.id}-${fillers.join('-')}-${sauceId}-${withTopping}`,
       type: 'bowl',
       name: bowlName,
       details: bowlDetails,
+      ruName: 'Боул',
+      ruDetails: bowlDetails.ru,
       price: total,
     });
   };
@@ -67,13 +70,13 @@ export function BowlBuilder() {
       <div className="relative mx-auto max-w-5xl">
         <div className="text-center">
           <span className="inline-block rounded-full bg-kissa-lime px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-kissa-green">
-            Конструктор боула
+            {t.bowl.sectionLabel}
           </span>
           <h2 className="mt-4 font-display text-3xl font-black uppercase text-kissa-green sm:text-4xl lg:text-5xl">
-            Собери свой боул
+            {t.bowl.heading}
           </h2>
           <p className="mx-auto mt-3 max-w-lg text-base text-kissa-green/80 sm:text-lg">
-            Выбери основу, добавь любимые наполнители и соус. Цена = цена основы, наполнители и соусы входят.
+            {t.bowl.description}
           </p>
         </div>
 
@@ -81,7 +84,7 @@ export function BowlBuilder() {
         <div className="mt-10">
           <h3 className="mb-4 flex items-center gap-3 font-display text-xl font-extrabold uppercase text-kissa-green sm:text-2xl">
             <span className="flex h-8 w-8 items-center justify-center rounded-full bg-kissa-pink text-white">1</span>
-            Выбери основу
+            {t.bowl.step1}
           </h3>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             {bowlBuilder.bases.map((b) => {
@@ -96,14 +99,14 @@ export function BowlBuilder() {
                 >
                   <SmartImage
                     src={b.image}
-                    alt={b.name}
+                    alt={loc(b.name, locale)}
                     className="h-20 w-20 flex-shrink-0 rounded-2xl object-cover"
                   />
                   <div className="flex-1">
-                    <p className="font-display text-base font-extrabold text-kissa-green sm:text-lg">{b.name}</p>
+                    <p className="font-display text-base font-extrabold text-kissa-green sm:text-lg">{loc(b.name, locale)}</p>
                     <p className="mt-1 font-display text-xl font-black text-kissa-pink">{b.price} ₸</p>
                     {b.macros && (
-                      <p className="mt-0.5 text-xs font-semibold text-kissa-olive">{formatMacros(b.macros)}</p>
+                      <p className="mt-0.5 text-xs font-semibold text-kissa-olive">{formatMacros(b.macros, locale)}</p>
                     )}
                   </div>
                   {selected && (
@@ -121,16 +124,13 @@ export function BowlBuilder() {
         <div className="mt-10">
           <h3 className="mb-4 flex items-center gap-3 font-display text-xl font-extrabold uppercase text-kissa-green sm:text-2xl">
             <span className="flex h-8 w-8 items-center justify-center rounded-full bg-kissa-pink text-white">2</span>
-            Добавь всё, что любишь
+            {t.bowl.step2}
           </h3>
           <div className="flex flex-wrap gap-2.5">
             {bowlBuilder.fillers.map((f) => {
               const selected = fillers.includes(f.id);
               return (
-                <span
-                  key={f.id}
-                  className="inline-flex flex-col items-start"
-                >
+                <span key={f.id} className="inline-flex flex-col items-start">
                   <button
                     onClick={() => toggleFiller(f.id)}
                     className={`rounded-full px-4 py-2.5 text-sm font-bold transition-all ${
@@ -141,11 +141,11 @@ export function BowlBuilder() {
                     aria-pressed={selected}
                   >
                     {selected && <Check size={14} className="mr-1 inline" strokeWidth={3} />}
-                    {f.name}
+                    {loc(f.name, locale)}
                   </button>
                   {f.macros && (
                     <span className="mt-0.5 px-2 text-[10px] font-semibold text-kissa-olive">
-                      {formatMacros(f.macros)}
+                      {formatMacros(f.macros, locale)}
                     </span>
                   )}
                 </span>
@@ -158,7 +158,7 @@ export function BowlBuilder() {
         <div className="mt-10">
           <h3 className="mb-4 flex items-center gap-3 font-display text-xl font-extrabold uppercase text-kissa-green sm:text-2xl">
             <span className="flex h-8 w-8 items-center justify-center rounded-full bg-kissa-pink text-white">3</span>
-            Выбери соус
+            {t.bowl.step3}
           </h3>
           <div className="flex flex-wrap gap-2.5">
             {bowlBuilder.sauces.map((s) => {
@@ -175,14 +175,14 @@ export function BowlBuilder() {
                     aria-pressed={selected}
                   >
                     {selected && <Check size={14} className="mr-1 inline" strokeWidth={3} />}
-                    {s.name}
+                    {loc(s.name, locale)}
                     {s.allergen && (
-                      <span className="ml-1.5 text-[10px] font-semibold normal-case opacity-80">({s.allergen})</span>
+                      <span className="ml-1.5 text-[10px] font-semibold normal-case opacity-80">({loc(s.allergen, locale)})</span>
                     )}
                   </button>
                   {s.macros && (
                     <span className="mt-0.5 px-2 text-[10px] font-semibold text-kissa-olive">
-                      {formatMacros(s.macros)}
+                      {formatMacros(s.macros, locale)}
                     </span>
                   )}
                 </span>
@@ -195,13 +195,13 @@ export function BowlBuilder() {
         <div className="mt-8 rounded-kissa bg-kissa-lime p-4 shadow-kissa sm:p-5">
           <p className="flex items-center gap-2 font-display text-base font-extrabold uppercase text-kissa-green sm:text-lg">
             <Sparkles size={20} className="text-kissa-pink" />
-            Финальный штрих: посыпка из смеси орехов и семян
+            {t.bowl.finalTouch}
           </p>
 
           <div className="mt-4 grid grid-cols-2 gap-3">
             <button
               onClick={() => setWithTopping(true)}
-              className={`flex items-center justify-center gap-2 rounded-kissa border-2 py-4 font-display text-sm font-extrabold uppercase transition-all ${
+              className={`flex items-center justify-center gap-2 rounded-kissa border-2 px-2 py-4 text-center font-display text-sm font-extrabold uppercase transition-all ${
                 withTopping
                   ? 'border-kissa-pink bg-kissa-pink text-white shadow-kissa'
                   : 'border-kissa-pink-light bg-white text-kissa-green hover:bg-kissa-pink-light/50'
@@ -209,11 +209,11 @@ export function BowlBuilder() {
               aria-pressed={withTopping}
             >
               {withTopping && <Check size={18} strokeWidth={3} />}
-              🥜 С посыпкой
+              {t.bowl.withTopping}
             </button>
             <button
               onClick={() => setWithTopping(false)}
-              className={`flex items-center justify-center gap-2 rounded-kissa border-2 py-4 font-display text-sm font-extrabold uppercase transition-all ${
+              className={`flex items-center justify-center gap-2 rounded-kissa border-2 px-2 py-4 text-center font-display text-sm font-extrabold uppercase transition-all ${
                 !withTopping
                   ? 'border-kissa-pink bg-kissa-pink text-white shadow-kissa'
                   : 'border-kissa-pink-light bg-white text-kissa-green hover:bg-kissa-pink-light/50'
@@ -221,46 +221,46 @@ export function BowlBuilder() {
               aria-pressed={!withTopping}
             >
               {!withTopping && <Check size={18} strokeWidth={3} />}
-              Без посыпки
+              {t.bowl.withoutTopping}
             </button>
           </div>
 
           <p className="mt-3 text-xs font-semibold text-kissa-green/70">
-            Посыпка содержит орехи. При аллергии выберите «Без посыпки» (цена не меняется).
+            {t.bowl.toppingAllergy}
           </p>
         </div>
 
         <p className="mt-3 text-center text-xs text-kissa-olive">
-          При аллергиях и особых пожеланиях уточняйте состав в{' '}
+          {t.bowl.allergyNote}{' '}
           <a href={whatsappInfoLink} target="_blank" rel="noopener noreferrer" className="underline">
-            WhatsApp
+            {t.bowl.allergyWhatsApp}
           </a>
         </p>
 
         {/* Summary + actions */}
         <div className="mt-8 rounded-kissa-lg bg-white p-5 shadow-kissa-lg sm:p-6">
-          <h3 className="font-display text-lg font-extrabold uppercase text-kissa-green">Твой боул</h3>
+          <h3 className="font-display text-lg font-extrabold uppercase text-kissa-green">{t.bowl.yourBowl}</h3>
           {!base ? (
-            <p className="mt-3 text-sm text-kissa-green/60">Выбери основу, чтобы начать собирать боул.</p>
+            <p className="mt-3 text-sm text-kissa-green/60">{t.bowl.chooseBase}</p>
           ) : (
             <div className="mt-3 space-y-1.5 text-sm sm:text-base">
-              <p className="text-kissa-green"><span className="font-bold">Основа:</span> {base.name}</p>
+              <p className="text-kissa-green"><span className="font-bold">{t.bowl.base}</span> {loc(base.name, locale)}</p>
               {selectedFillers.length > 0 ? (
-                <p className="text-kissa-green"><span className="font-bold">Наполнители:</span> {selectedFillers.map((f) => f.name).join(', ')}</p>
+                <p className="text-kissa-green"><span className="font-bold">{t.bowl.fillers}</span> {selectedFillers.map((f) => loc(f.name, locale)).join(', ')}</p>
               ) : (
-                <p className="text-kissa-green/50"><span className="font-bold">Наполнители:</span> не выбраны</p>
+                <p className="text-kissa-green/50"><span className="font-bold">{t.bowl.fillers}</span> {t.bowl.noFillers}</p>
               )}
-              {sauce && <p className="text-kissa-green"><span className="font-bold">Соус:</span> {sauce.name}</p>}
+              {sauce && <p className="text-kissa-green"><span className="font-bold">{t.bowl.sauce}</span> {loc(sauce.name, locale)}</p>}
               <p className="text-kissa-green">
-                <span className="font-bold">Посыпка:</span>{' '}
-                {withTopping ? 'с посыпкой' : 'без посыпки'}
+                <span className="font-bold">{t.bowl.topping}</span>{' '}
+                {withTopping ? t.bowl.withToppingShort : t.bowl.withoutToppingShort}
               </p>
               {bowlMacros && (
                 <div className="mt-2 rounded-xl bg-kissa-pink-light px-3 py-2">
                   <p className="text-xs font-bold text-kissa-green">
-                    Примерно: {formatMacros(bowlMacros)}
+                    {t.bowl.approx} {formatMacros(bowlMacros, locale)}
                   </p>
-                  <p className="mt-0.5 text-[10px] text-kissa-olive">без учёта посыпки</p>
+                  <p className="mt-0.5 text-[10px] text-kissa-olive">{t.bowl.withoutToppingNote}</p>
                 </div>
               )}
             </div>
@@ -268,7 +268,7 @@ export function BowlBuilder() {
 
           <div className="mt-5 flex flex-col items-center justify-between gap-4 border-t-2 border-kissa-pink-light pt-5 sm:flex-row">
             <div>
-              <p className="text-xs font-bold uppercase text-kissa-olive">Итого</p>
+              <p className="text-xs font-bold uppercase text-kissa-olive">{t.bowl.total}</p>
               <p className="font-display text-3xl font-black text-kissa-pink">
                 {total > 0 ? `${total} ₸` : '— ₸'}
               </p>
@@ -283,7 +283,7 @@ export function BowlBuilder() {
               }`}
             >
               <ShoppingCart size={18} />
-              Добавить в корзину
+              {t.bowl.addToCart}
             </button>
           </div>
         </div>

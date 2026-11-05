@@ -5,8 +5,10 @@ import { Daisy } from './Decor';
 import { ComboModal } from './ComboModal';
 import { combo as comboData } from '../data/menu';
 import { isComboAvailable } from '../utils/comboTime';
+import { useI18n } from '../context/I18nContext';
 
 export function ComboBanner() {
+  const { t, locale } = useI18n();
   const [modalOpen, setModalOpen] = useState(false);
   const [available, setAvailable] = useState(isComboAvailable());
 
@@ -27,7 +29,7 @@ export function ComboBanner() {
           <div className="relative overflow-hidden rounded-kissa-lg shadow-kissa">
             <SmartImage
               src={comboData.image}
-              alt={comboData.title}
+              alt={comboData.title[locale]}
               className="aspect-[4/3] w-full object-cover"
             />
           </div>
@@ -35,16 +37,16 @@ export function ComboBanner() {
 
         <div className="text-center md:text-left">
           <span className="inline-flex items-center gap-1.5 rounded-full bg-kissa-pink px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-white">
-            <Clock size={14} /> Каждый день 8:00–12:00
+            <Clock size={14} /> {t.combo.everyday}
           </span>
           <h2 className="mt-4 font-display text-3xl font-black uppercase text-kissa-green sm:text-4xl">
-            Комбо {comboData.price} ₸
+            {t.combo.title} {comboData.price} ₸
           </h2>
           <p className="mt-3 text-lg font-semibold text-kissa-green sm:text-xl">
-            {comboData.title}
+            {comboData.title[locale]}
           </p>
           <p className="mt-2 text-base text-kissa-green/80">
-            {comboData.description}
+            {comboData.description[locale]}
           </p>
 
           <div className="mt-6 flex flex-col items-center gap-2 md:items-start">
@@ -54,12 +56,12 @@ export function ComboBanner() {
                 className="inline-flex items-center gap-2 rounded-full bg-kissa-pink px-7 py-3.5 font-bold text-white shadow-kissa-lg transition-transform hover:scale-105 active:scale-95"
               >
                 <Sparkles size={18} />
-                Выбрать комбо
+                {t.combo.chooseCombo}
               </button>
             ) : (
               <div className="inline-flex items-center gap-2 rounded-full bg-gray-300 px-7 py-3.5 font-bold text-gray-600">
                 <AlertTriangle size={18} />
-                Комбо доступно с 8:00 до 12:00
+                {t.combo.availableTimes}
               </div>
             )}
           </div>

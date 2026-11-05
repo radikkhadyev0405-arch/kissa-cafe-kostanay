@@ -1,13 +1,16 @@
 import { Instagram } from 'lucide-react';
 import { cafeInfo } from '../data/menu';
+import { useI18n } from '../context/I18nContext';
 
 export function Footer() {
+  const { t } = useI18n();
+
   return (
     <footer className="bg-kissa-green px-4 py-10 sm:px-6">
       <div className="mx-auto flex max-w-5xl flex-col items-center gap-4 text-center">
         <span className="font-display text-3xl font-black uppercase text-white">KISSA</span>
-        <p className="text-sm text-white/80">{cafeInfo.about}</p>
-        <p className="text-sm text-white/80">Матча · Смузи · Боулы · Сэндвичи · Костанай</p>
+        <p className="text-sm text-white/80">{t.footer.about}</p>
+        <p className="text-sm text-white/80">{t.footer.tagline}</p>
         <a
           href={cafeInfo.instagram}
           target="_blank"

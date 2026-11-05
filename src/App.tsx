@@ -1,3 +1,4 @@
+import { I18nProvider } from './context/I18nContext';
 import { CartProvider } from './context/CartContext';
 import { Header } from './components/Header';
 import { Hero } from './components/Hero';
