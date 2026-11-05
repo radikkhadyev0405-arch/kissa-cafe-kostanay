@@ -10,6 +10,7 @@ import {
 } from 'react';
 import type { CartItem } from '../utils/cart';
 import { cartCount, cartTotal } from '../utils/cart';
+import { useI18n } from './I18nContext';
 
 interface CartContextValue {
   items: CartItem[];
@@ -44,13 +45,19 @@ function loadItems(): CartItem[] {
 }
 
 export function CartProvider({ children }: { children: ReactNode }) {
+  const { t } = useI18n();
   const [items, setItems] = useState<CartItem[]>(loadItems);
   const [isOpen, setIsOpen] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
   const [bump, setBump] = useState(false);
   const toastTimer = useRef<number | undefined>(undefined);
+  const toastMsg = useRef(t.cart.addedToCart);
 
-  // Persist
+  // Keep toast message ref updated with current locale
+  useEffect(() => {
+    toastMsg.current = t.cart.addedToCart;
+  }, [t]);
+
   useEffect(() => {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
@@ -78,7 +85,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
         }
         return [...prev, { ...item, qty }];
       });
-      showToast('Добавлено в корзину');
+      showToast(toastMsg.current);
     },
     [showToast]
   );

@@ -17,7 +17,7 @@ export default {
         },
       },
       fontFamily: {
-        display: ['Unbounded', 'sans-serif'],
+        display: ['Unbounded', 'Montserrat', 'sans-serif'],
         body: ['Manrope', 'sans-serif'],
       },
       borderRadius: {

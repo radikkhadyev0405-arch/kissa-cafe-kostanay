@@ -3,9 +3,11 @@ import { MessageCircle, Instagram, ArrowDown, Clock } from 'lucide-react';
 import { SmartImage } from './SmartImage';
 import { Starfish, Daisy } from './Decor';
 import { cafeInfo } from '../data/menu';
+import { useI18n } from '../context/I18nContext';
 import { isCafeOpen } from '../utils/comboTime';
 
 export function Hero() {
+  const { t, locale } = useI18n();
   const whatsappLink = `https://wa.me/${cafeInfo.whatsapp}`;
   const [open, setOpen] = useState(isCafeOpen());
 
@@ -25,36 +27,36 @@ export function Hero() {
       <div className="relative mx-auto grid max-w-6xl items-center gap-10 md:grid-cols-2">
         <div className="text-center md:text-left">
           <span className="inline-block rounded-full bg-kissa-lime px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-kissa-green animate-pop">
-            Костанай · Казахстан
+            {t.hero.location}
           </span>
 
           {/* Hours badge + open/closed indicator */}
-          <div className="mt-4 inline-flex items-center gap-2 rounded-full bg-white/15 px-4 py-2 backdrop-blur-sm">
+          <div className="mt-4 inline-flex flex-wrap items-center justify-center gap-2 rounded-full bg-white/15 px-4 py-2 backdrop-blur-sm">
             <Clock size={16} className="text-white" />
-            <span className="text-sm font-bold text-white">Работаем ежедневно 08:00–22:00</span>
+            <span className="text-sm font-bold text-white">{t.hero.hoursBadge}</span>
             <span className="flex items-center gap-1.5 border-l border-white/30 pl-2">
               <span
                 className={`h-2.5 w-2.5 rounded-full ${open ? 'bg-green-400 animate-pulse' : 'bg-gray-400'}`}
                 aria-hidden="true"
               />
               <span className="text-xs font-bold text-white">
-                {open ? 'Открыто сейчас' : 'Сейчас закрыто'}
+                {open ? t.hero.openNow : t.hero.closedNow}
               </span>
             </span>
           </div>
 
           <h1 className="mt-5 font-display text-4xl font-black uppercase leading-[1.05] text-white text-balance sm:text-5xl lg:text-6xl">
-            Your perfect drink is waiting at KISSA
+            {t.hero.title}
           </h1>
           <p className="mx-auto mt-5 max-w-md text-lg font-semibold text-white sm:text-xl md:mx-0">
-            От любимой матчи до классического кофе. Смузи, боулы и сэндвичи.
+            {t.hero.subtitle}
           </p>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center md:justify-start">
             <a
               href="#menu"
               className="inline-flex items-center justify-center gap-2 rounded-full bg-white px-7 py-3.5 font-bold text-kissa-pink shadow-kissa-lg transition-transform hover:scale-105 active:scale-95"
             >
-              Смотреть меню
+              {t.hero.viewMenu}
               <ArrowDown size={18} />
             </a>
             <a
@@ -64,7 +66,7 @@ export function Hero() {
               className="inline-flex items-center justify-center gap-2 rounded-full bg-kissa-green px-7 py-3.5 font-bold text-white transition-transform hover:scale-105 active:scale-95"
             >
               <Instagram size={18} />
-              Instagram
+              {t.hero.instagram}
             </a>
           </div>
           <div className="mt-8 flex items-center justify-center gap-4 text-white/90 md:justify-start">
@@ -74,7 +76,7 @@ export function Hero() {
               rel="noopener noreferrer"
               className="inline-flex items-center gap-1.5 text-sm font-semibold underline-offset-4 hover:underline"
             >
-              <MessageCircle size={16} /> Написать в WhatsApp
+              <MessageCircle size={16} /> {t.hero.writeWhatsApp}
             </a>
           </div>
         </div>
@@ -84,14 +86,14 @@ export function Hero() {
           <div className="relative overflow-hidden rounded-kissa-lg shadow-kissa-lg">
             <SmartImage
               src="/images/hero.jpg"
-              alt="Напитки и боулы кофейни KISSA"
+              alt={locale === 'ru' ? 'Напитки и боулы кофейни KISSA' : locale === 'kk' ? 'KISSA кофейнясының сусындары мен боулдары' : 'KISSA coffee shop drinks and bowls'}
               label="KISSA"
               className="aspect-square w-full object-cover"
             />
           </div>
           <div className="absolute -bottom-4 -left-4 rotate-[-8deg] rounded-kissa bg-white px-5 py-3 shadow-kissa-lg">
             <p className="font-display text-2xl font-black text-kissa-pink">2990 ₸</p>
-            <p className="text-xs font-bold uppercase text-kissa-green">Комбо до 12:00</p>
+            <p className="text-xs font-bold uppercase text-kissa-green">{t.hero.comboUntil}</p>
           </div>
         </div>
       </div>
