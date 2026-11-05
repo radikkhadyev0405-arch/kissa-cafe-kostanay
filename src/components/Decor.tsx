@@ -1,4 +1,9 @@
-export function Starfish({ className = '', color = '#fff' }) {
+interface StarfishProps {
+  className?: string;
+  color?: string;
+}
+
+export function Starfish({ className = '', color = '#fff' }: StarfishProps) {
   return (
     <svg viewBox="0 0 100 100" className={className} fill="none" aria-hidden="true">
       <path
@@ -17,7 +22,13 @@ export function Starfish({ className = '', color = '#fff' }) {
   );
 }
 
-export function Daisy({ className = '', petalColor = '#fff', centerColor = '#E8559A' }) {
+interface DaisyProps {
+  className?: string;
+  petalColor?: string;
+  centerColor?: string;
+}
+
+export function Daisy({ className = '', petalColor = '#fff', centerColor = '#E8559A' }: DaisyProps) {
   const petals = Array.from({ length: 8 });
   return (
     <svg viewBox="0 0 100 100" className={className} aria-hidden="true">

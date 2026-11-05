@@ -1,10 +1,19 @@
-import { MessageCircle, Instagram, ArrowDown } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { MessageCircle, Instagram, ArrowDown, Clock } from 'lucide-react';
 import { SmartImage } from './SmartImage';
 import { Starfish, Daisy } from './Decor';
 import { cafeInfo } from '../data/menu';
+import { isCafeOpen } from '../utils/comboTime';
 
 export function Hero() {
   const whatsappLink = `https://wa.me/${cafeInfo.whatsapp}`;
+  const [open, setOpen] = useState(isCafeOpen());
+
+  useEffect(() => {
+    setOpen(isCafeOpen());
+    const id = window.setInterval(() => setOpen(isCafeOpen()), 60_000);
+    return () => window.clearInterval(id);
+  }, []);
 
   return (
     <section id="top" className="relative overflow-hidden bg-kissa-pink px-4 pt-28 pb-16 sm:px-6 sm:pt-36 sm:pb-24">
@@ -18,6 +27,22 @@ export function Hero() {
           <span className="inline-block rounded-full bg-kissa-lime px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-kissa-green animate-pop">
             Костанай · Казахстан
           </span>
+
+          {/* Hours badge + open/closed indicator */}
+          <div className="mt-4 inline-flex items-center gap-2 rounded-full bg-white/15 px-4 py-2 backdrop-blur-sm">
+            <Clock size={16} className="text-white" />
+            <span className="text-sm font-bold text-white">Работаем ежедневно 08:00–22:00</span>
+            <span className="flex items-center gap-1.5 border-l border-white/30 pl-2">
+              <span
+                className={`h-2.5 w-2.5 rounded-full ${open ? 'bg-green-400 animate-pulse' : 'bg-gray-400'}`}
+                aria-hidden="true"
+              />
+              <span className="text-xs font-bold text-white">
+                {open ? 'Открыто сейчас' : 'Сейчас закрыто'}
+              </span>
+            </span>
+          </div>
+
           <h1 className="mt-5 font-display text-4xl font-black uppercase leading-[1.05] text-white text-balance sm:text-5xl lg:text-6xl">
             Your perfect drink is waiting at KISSA
           </h1>

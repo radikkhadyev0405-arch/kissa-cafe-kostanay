@@ -5,9 +5,6 @@ import { cafeInfo } from '../data/menu';
 
 export function Contacts() {
   const whatsappLink = `https://wa.me/${cafeInfo.whatsapp}?text=${encodeURIComponent('Здравствуйте! Хочу сделать заказ в KISSA')}`;
-  const addressQuery = encodeURIComponent(cafeInfo.addressShort);
-  const twogisLink = `https://2gis.kz/kostanay/search/${addressQuery}`;
-  const googleMapsLink = `https://www.google.com/maps/search/?api=1&query=${addressQuery}`;
 
   return (
     <section id="contacts" className="relative overflow-hidden bg-kissa-pink-light px-4 py-14 sm:px-6 sm:py-20">
@@ -79,7 +76,7 @@ export function Contacts() {
             </div>
           </div>
 
-          {/* Map card (no iframe) */}
+          {/* Map card (2ГИС only) */}
           <div className="flex flex-col rounded-kissa-lg bg-white p-6 shadow-kissa-lg">
             <div className="mb-4 flex items-center gap-3">
               <span className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-kissa-lime text-kissa-green">
@@ -101,24 +98,15 @@ export function Contacts() {
               </div>
             </div>
 
-            <div className="grid gap-3 sm:grid-cols-2">
-              <a
-                href={twogisLink}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center justify-center gap-2 rounded-full bg-kissa-green py-3 font-bold text-white shadow-kissa transition-transform hover:scale-105 active:scale-95"
-              >
-                Открыть в 2ГИС
-              </a>
-              <a
-                href={googleMapsLink}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center justify-center gap-2 rounded-full bg-kissa-pink py-3 font-bold text-white shadow-kissa transition-transform hover:scale-105 active:scale-95"
-              >
-                Открыть в Google Maps
-              </a>
-            </div>
+            <a
+              href={cafeInfo.gis2Url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex w-full items-center justify-center gap-2 rounded-full bg-kissa-green py-3.5 font-bold text-white shadow-kissa transition-transform hover:scale-105 active:scale-95"
+            >
+              <Navigation size={18} />
+              Открыть в 2ГИС
+            </a>
           </div>
         </div>
       </div>

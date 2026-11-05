@@ -1,10 +1,10 @@
 import { useState } from 'react';
-import { Flame, Plus } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import { SmartImage } from './SmartImage';
 import { Starfish } from './Decor';
 import { MatchaModal } from './MatchaModal';
 import { useCart } from '../context/CartContext';
-import { drinkCategories } from '../data/menu';
+import { drinkCategories, type DrinkItem } from '../data/menu';
 
 export function DrinksMenu() {
   const { addItem } = useCart();
@@ -13,7 +13,7 @@ export function DrinksMenu() {
 
   const current = drinkCategories.find((c) => c.id === active)!;
 
-  const handleAdd = (catId: string, item: { id: string; name: string; price: number; image?: string | null }) => {
+  const handleAdd = (catId: string, item: { id: string; name: string; price: number }) => {
     if (catId === 'matcha') {
       setMatchaItem({ id: item.id, name: item.name, price: item.price });
       return;
@@ -64,7 +64,7 @@ export function DrinksMenu() {
         </p>
 
         <div key={active} className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {current.items.map((item, i) => (
+          {current.items.map((item: DrinkItem, i) => (
             <article
               key={item.id}
               className="group flex gap-4 overflow-hidden rounded-kissa bg-white p-4 shadow-kissa transition-transform hover:-translate-y-1 hover:shadow-kissa-lg"
@@ -80,8 +80,8 @@ export function DrinksMenu() {
                   <h3 className="font-display text-base font-extrabold leading-tight text-kissa-green sm:text-lg">
                     {item.name}
                   </h3>
-                  <p className="mt-1 flex items-center gap-1 text-xs font-semibold text-kissa-olive">
-                    <Flame size={13} /> {item.kcal} ккал
+                  <p className="mt-1 text-xs font-semibold text-kissa-olive">
+                    {item.kcal} ккал
                   </p>
                 </div>
                 <div className="flex items-center justify-between gap-2">

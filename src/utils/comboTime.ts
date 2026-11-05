@@ -1,4 +1,4 @@
-// Утилита доступности комбо по времени Костаная.
+// Утилита доступности комбо и статуса «открыто/закрыто» по времени Костаная.
 // Часовой пояс Asia/Qostanay (UTC+5), не зависит от устройства клиента.
 
 export function getQostanayHour(): number {
@@ -22,4 +22,10 @@ export function getQostanayHour(): number {
 export function isComboAvailable(): boolean {
   const hour = getQostanayHour();
   return hour >= 8 && hour < 12;
+}
+
+// Кофейня работает ежедневно 08:00–22:00
+export function isCafeOpen(): boolean {
+  const hour = getQostanayHour();
+  return hour >= 8 && hour < 22;
 }

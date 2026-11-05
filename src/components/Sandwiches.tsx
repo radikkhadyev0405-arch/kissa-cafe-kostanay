@@ -3,6 +3,7 @@ import { SmartImage } from './SmartImage';
 import { Daisy } from './Decor';
 import { useCart } from '../context/CartContext';
 import { sandwiches } from '../data/menu';
+import { formatMacrosGrams } from '../utils/macros';
 
 export function Sandwiches() {
   const { addItem } = useCart();
@@ -51,6 +52,9 @@ export function Sandwiches() {
               </div>
               <div className="p-5">
                 <h3 className="font-display text-lg font-extrabold uppercase text-kissa-green">{s.name}</h3>
+                <p className="mt-1 text-xs font-semibold text-kissa-olive">
+                  {formatMacrosGrams(s.macros)}
+                </p>
                 <div className="mt-3 flex items-center justify-between gap-2">
                   <p className="font-display text-2xl font-black text-kissa-pink">{s.price} ₸</p>
                   <button

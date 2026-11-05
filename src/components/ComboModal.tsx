@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Clock, AlertTriangle, Check } from 'lucide-react';
 import { Modal } from './Modal';
 import { useCart } from '../context/CartContext';
-import { combo as comboData, cafeInfo } from '../data/menu';
+import { combo as comboData } from '../data/menu';
 import { isComboAvailable } from '../utils/comboTime';
 
 interface ComboModalProps {
@@ -73,7 +73,7 @@ export function ComboModal({ open, onClose }: ComboModalProps) {
       </div>
 
       <div className="mt-4 flex items-center gap-1.5 text-xs font-semibold text-kissa-olive">
-        <Clock size={14} /> Только с 8:00 до 12:00 · {cafeInfo.hours}
+        <Clock size={14} /> Комбо доступно с 8:00 до 12:00
       </div>
 
       <button

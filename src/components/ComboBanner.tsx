@@ -3,7 +3,7 @@ import { Clock, AlertTriangle, Sparkles } from 'lucide-react';
 import { SmartImage } from './SmartImage';
 import { Daisy } from './Decor';
 import { ComboModal } from './ComboModal';
-import { combo as comboData, cafeInfo } from '../data/menu';
+import { combo as comboData } from '../data/menu';
 import { isComboAvailable } from '../utils/comboTime';
 
 export function ComboBanner() {
@@ -63,7 +63,7 @@ export function ComboBanner() {
               </div>
             )}
             <p className="text-xs font-semibold text-kissa-olive">
-              Только с 8:00 до 12:00 · {cafeInfo.hours}
+              Комбо доступно с 8:00 до 12:00
             </p>
           </div>
         </div>

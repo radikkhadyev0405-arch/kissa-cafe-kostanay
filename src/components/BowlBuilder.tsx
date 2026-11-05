@@ -1,10 +1,10 @@
 import { useMemo, useState } from 'react';
-import { Check, Sparkles, MessageCircle, ShoppingCart, AlertTriangle } from 'lucide-react';
+import { Check, Sparkles, ShoppingCart } from 'lucide-react';
 import { SmartImage } from './SmartImage';
 import { Daisy, Starfish } from './Decor';
 import { useCart } from '../context/CartContext';
 import { bowlBuilder, cafeInfo } from '../data/menu';
-import { whatsappSingleLink, buildBowlOrderMessage } from '../utils/cart';
+import { formatMacros, sumMacros } from '../utils/macros';
 
 export function BowlBuilder() {
   const { addItem } = useCart();
@@ -34,8 +34,17 @@ export function BowlBuilder() {
     return parts.join(', ');
   }, [base, selectedFillers, sauce, withTopping]);
 
+  const bowlMacros = useMemo(() => {
+    if (!base) return null;
+    const items = [
+      base.macros,
+      ...selectedFillers.map((f) => f.macros),
+      sauce?.macros,
+    ];
+    return sumMacros(items);
+  }, [base, selectedFillers, sauce]);
+
   const bowlName = 'Боул';
-  const hasAllergen = sauce?.id === 'nut' || withTopping;
 
   const handleAddToCart = () => {
     if (!base) return;
@@ -46,12 +55,6 @@ export function BowlBuilder() {
       details: bowlDetails,
       price: total,
     });
-  };
-
-  const handleWhatsApp = () => {
-    if (!base) return;
-    const msg = buildBowlOrderMessage({ name: bowlName, details: bowlDetails, price: total });
-    window.open(whatsappSingleLink(msg), '_blank', 'noopener,noreferrer');
   };
 
   const whatsappInfoLink = `https://wa.me/${cafeInfo.whatsapp}?text=${encodeURIComponent('Здравствуйте! У меня вопрос по составу боула (аллергия).')}`;
@@ -99,6 +102,9 @@ export function BowlBuilder() {
                   <div className="flex-1">
                     <p className="font-display text-base font-extrabold text-kissa-green sm:text-lg">{b.name}</p>
                     <p className="mt-1 font-display text-xl font-black text-kissa-pink">{b.price} ₸</p>
+                    {b.macros && (
+                      <p className="mt-0.5 text-xs font-semibold text-kissa-olive">{formatMacros(b.macros)}</p>
+                    )}
                   </div>
                   {selected && (
                     <span className="absolute right-3 top-3 flex h-7 w-7 items-center justify-center rounded-full bg-kissa-pink text-white animate-pop">
@@ -121,19 +127,28 @@ export function BowlBuilder() {
             {bowlBuilder.fillers.map((f) => {
               const selected = fillers.includes(f.id);
               return (
-                <button
+                <span
                   key={f.id}
-                  onClick={() => toggleFiller(f.id)}
-                  className={`rounded-full px-4 py-2.5 text-sm font-bold transition-all ${
-                    selected
-                      ? 'bg-kissa-green text-white shadow-kissa scale-105'
-                      : 'bg-white text-kissa-green shadow-kissa hover:bg-kissa-lime'
-                  }`}
-                  aria-pressed={selected}
+                  className="inline-flex flex-col items-start"
                 >
-                  {selected && <Check size={14} className="mr-1 inline" strokeWidth={3} />}
-                  {f.name}
-                </button>
+                  <button
+                    onClick={() => toggleFiller(f.id)}
+                    className={`rounded-full px-4 py-2.5 text-sm font-bold transition-all ${
+                      selected
+                        ? 'bg-kissa-green text-white shadow-kissa scale-105'
+                        : 'bg-white text-kissa-green shadow-kissa hover:bg-kissa-lime'
+                    }`}
+                    aria-pressed={selected}
+                  >
+                    {selected && <Check size={14} className="mr-1 inline" strokeWidth={3} />}
+                    {f.name}
+                  </button>
+                  {f.macros && (
+                    <span className="mt-0.5 px-2 text-[10px] font-semibold text-kissa-olive">
+                      {formatMacros(f.macros)}
+                    </span>
+                  )}
+                </span>
               );
             })}
           </div>
@@ -149,67 +164,78 @@ export function BowlBuilder() {
             {bowlBuilder.sauces.map((s) => {
               const selected = sauceId === s.id;
               return (
-                <button
-                  key={s.id}
-                  onClick={() => setSauceId(s.id)}
-                  className={`rounded-full px-4 py-2.5 text-sm font-bold transition-all ${
-                    selected
-                      ? 'bg-kissa-olive text-white shadow-kissa scale-105'
-                      : 'bg-white text-kissa-green shadow-kissa hover:bg-kissa-lime'
-                  }`}
-                  aria-pressed={selected}
-                >
-                  {selected && <Check size={14} className="mr-1 inline" strokeWidth={3} />}
-                  {s.name}
-                  {s.allergen && (
-                    <span className="ml-1.5 text-[10px] font-semibold normal-case opacity-80">({s.allergen})</span>
+                <span key={s.id} className="inline-flex flex-col items-start">
+                  <button
+                    onClick={() => setSauceId(s.id)}
+                    className={`rounded-full px-4 py-2.5 text-sm font-bold transition-all ${
+                      selected
+                        ? 'bg-kissa-olive text-white shadow-kissa scale-105'
+                        : 'bg-white text-kissa-green shadow-kissa hover:bg-kissa-lime'
+                    }`}
+                    aria-pressed={selected}
+                  >
+                    {selected && <Check size={14} className="mr-1 inline" strokeWidth={3} />}
+                    {s.name}
+                    {s.allergen && (
+                      <span className="ml-1.5 text-[10px] font-semibold normal-case opacity-80">({s.allergen})</span>
+                    )}
+                  </button>
+                  {s.macros && (
+                    <span className="mt-0.5 px-2 text-[10px] font-semibold text-kissa-olive">
+                      {formatMacros(s.macros)}
+                    </span>
                   )}
-                </button>
+                </span>
               );
             })}
           </div>
         </div>
 
-        {/* Final touch — toggle */}
-        <div className="mt-8 rounded-kissa bg-kissa-lime p-4 shadow-kissa">
-          <label className="flex cursor-pointer items-start gap-3">
+        {/* Final touch — big choice buttons */}
+        <div className="mt-8 rounded-kissa bg-kissa-lime p-4 shadow-kissa sm:p-5">
+          <p className="flex items-center gap-2 font-display text-base font-extrabold uppercase text-kissa-green sm:text-lg">
+            <Sparkles size={20} className="text-kissa-pink" />
+            Финальный штрих: посыпка из смеси орехов и семян
+          </p>
+
+          <div className="mt-4 grid grid-cols-2 gap-3">
             <button
-              type="button"
-              role="switch"
-              aria-checked={withTopping}
-              onClick={() => setWithTopping(!withTopping)}
-              className={`relative mt-0.5 h-7 w-12 flex-shrink-0 rounded-full transition-colors ${
-                withTopping ? 'bg-kissa-pink' : 'bg-gray-300'
+              onClick={() => setWithTopping(true)}
+              className={`flex items-center justify-center gap-2 rounded-kissa border-2 py-4 font-display text-sm font-extrabold uppercase transition-all ${
+                withTopping
+                  ? 'border-kissa-pink bg-kissa-pink text-white shadow-kissa'
+                  : 'border-kissa-pink-light bg-white text-kissa-green hover:bg-kissa-pink-light/50'
               }`}
-              aria-label="Посыпка из орехов и семян"
+              aria-pressed={withTopping}
             >
-              <span
-                className={`absolute top-1 h-5 w-5 rounded-full bg-white transition-transform ${
-                  withTopping ? 'translate-x-6' : 'translate-x-1'
-                }`}
-              />
+              {withTopping && <Check size={18} strokeWidth={3} />}
+              🥜 С посыпкой
             </button>
-            <div className="flex-1">
-              <p className="flex items-center gap-2 font-semibold text-kissa-green">
-                <Sparkles size={18} className="text-kissa-pink" />
-                <span className="font-display font-extrabold uppercase">Финальный штрих —</span>
-              </p>
-              <p className="mt-0.5 text-sm font-semibold text-kissa-green">Посыпка из смеси орехов и семян</p>
-              <p className="mt-1 text-xs text-kissa-green/70">
-                Содержит орехи. Если у вас аллергия, отключите и напишите нам в WhatsApp.
-              </p>
-            </div>
-          </label>
+            <button
+              onClick={() => setWithTopping(false)}
+              className={`flex items-center justify-center gap-2 rounded-kissa border-2 py-4 font-display text-sm font-extrabold uppercase transition-all ${
+                !withTopping
+                  ? 'border-kissa-pink bg-kissa-pink text-white shadow-kissa'
+                  : 'border-kissa-pink-light bg-white text-kissa-green hover:bg-kissa-pink-light/50'
+              }`}
+              aria-pressed={!withTopping}
+            >
+              {!withTopping && <Check size={18} strokeWidth={3} />}
+              Без посыпки
+            </button>
+          </div>
+
+          <p className="mt-3 text-xs font-semibold text-kissa-green/70">
+            Посыпка содержит орехи. При аллергии выберите «Без посыпки» (цена не меняется).
+          </p>
         </div>
 
-        {(hasAllergen) && (
-          <p className="mt-3 text-center text-xs text-kissa-olive">
-            При аллергиях и особых пожеланиях уточняйте состав в{' '}
-            <a href={whatsappInfoLink} target="_blank" rel="noopener noreferrer" className="underline">
-              WhatsApp
-            </a>
-          </p>
-        )}
+        <p className="mt-3 text-center text-xs text-kissa-olive">
+          При аллергиях и особых пожеланиях уточняйте состав в{' '}
+          <a href={whatsappInfoLink} target="_blank" rel="noopener noreferrer" className="underline">
+            WhatsApp
+          </a>
+        </p>
 
         {/* Summary + actions */}
         <div className="mt-8 rounded-kissa-lg bg-white p-5 shadow-kissa-lg sm:p-6">
@@ -227,8 +253,16 @@ export function BowlBuilder() {
               {sauce && <p className="text-kissa-green"><span className="font-bold">Соус:</span> {sauce.name}</p>}
               <p className="text-kissa-green">
                 <span className="font-bold">Посыпка:</span>{' '}
-                {withTopping ? 'из смеси орехов и семян' : 'без посыпки'}
+                {withTopping ? 'с посыпкой' : 'без посыпки'}
               </p>
+              {bowlMacros && (
+                <div className="mt-2 rounded-xl bg-kissa-pink-light px-3 py-2">
+                  <p className="text-xs font-bold text-kissa-green">
+                    Примерно: {formatMacros(bowlMacros)}
+                  </p>
+                  <p className="mt-0.5 text-[10px] text-kissa-olive">без учёта посыпки</p>
+                </div>
+              )}
             </div>
           )}
 
@@ -239,32 +273,18 @@ export function BowlBuilder() {
                 {total > 0 ? `${total} ₸` : '— ₸'}
               </p>
             </div>
-            <div className="flex w-full flex-col gap-2.5 sm:w-auto sm:flex-row">
-              <button
-                onClick={handleAddToCart}
-                disabled={!base}
-                className={`inline-flex flex-1 items-center justify-center gap-2 rounded-full px-6 py-3.5 font-bold transition-transform sm:flex-none ${
-                  base
-                    ? 'bg-kissa-pink text-white shadow-kissa hover:scale-105 active:scale-95'
-                    : 'cursor-not-allowed bg-gray-200 text-gray-400'
-                }`}
-              >
-                <ShoppingCart size={18} />
-                В корзину
-              </button>
-              <button
-                onClick={handleWhatsApp}
-                disabled={!base}
-                className={`inline-flex flex-1 items-center justify-center gap-2 rounded-full px-6 py-3.5 font-bold transition-transform sm:flex-none ${
-                  base
-                    ? 'bg-kissa-green text-white shadow-kissa hover:scale-105 active:scale-95'
-                    : 'cursor-not-allowed bg-gray-200 text-gray-400'
-                }`}
-              >
-                <MessageCircle size={18} />
-                Заказать в WhatsApp
-              </button>
-            </div>
+            <button
+              onClick={handleAddToCart}
+              disabled={!base}
+              className={`inline-flex w-full items-center justify-center gap-2 rounded-full px-7 py-3.5 font-bold transition-transform sm:w-auto ${
+                base
+                  ? 'bg-kissa-pink text-white shadow-kissa hover:scale-105 active:scale-95'
+                  : 'cursor-not-allowed bg-gray-200 text-gray-400'
+              }`}
+            >
+              <ShoppingCart size={18} />
+              Добавить в корзину
+            </button>
           </div>
         </div>
       </div>
