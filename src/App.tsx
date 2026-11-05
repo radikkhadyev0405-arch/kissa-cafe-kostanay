@@ -12,8 +12,9 @@ import { Cart } from './components/Cart';
 
 function App() {
   return (
-    <CartProvider>
-      <div className="min-h-screen bg-kissa-cream font-body text-kissa-green">
+    <I18nProvider>
+      <CartProvider>
+        <div className="min-h-screen bg-kissa-cream font-body text-kissa-green">
         <Header />
         <main>
           <Hero />
@@ -26,7 +27,8 @@ function App() {
         <Footer />
         <Cart />
       </div>
-    </CartProvider>
+      </CartProvider>
+    </I18nProvider>
   );
 }
 
