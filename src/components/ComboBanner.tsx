@@ -62,9 +62,6 @@ export function ComboBanner() {
                 Комбо доступно с 8:00 до 12:00
               </div>
             )}
-            <p className="text-xs font-semibold text-kissa-olive">
-              Комбо доступно с 8:00 до 12:00
-            </p>
           </div>
         </div>
       </div>
