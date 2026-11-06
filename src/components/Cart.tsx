@@ -1,26 +1,56 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { ShoppingBag, X, Plus, Minus, Trash2, MessageCircle, AlertTriangle } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { useI18n } from '../context/I18nContext';
 import { isComboAvailable } from '../utils/comboTime';
 import { whatsappOrderLink } from '../utils/cart';
-import { cafeInfo } from '../data/menu';
 
 export function Cart() {
   const { t, locale } = useI18n();
-  const { items, total, count, isOpen, openCart, closeCart, removeItem, changeQty, clear, bump, toast } = useCart();
+  const { items, total, count, isOpen, openCart, closeCart, removeItem, removeCombos, changeQty, clear, bump, toast } = useCart();
   const [comment, setComment] = useState('');
   const [nowAvailable, setNowAvailable] = useState(isComboAvailable());
+  const [comboRemovedMsg, setComboRemovedMsg] = useState(false);
+  const lastAvailableRef = useRef(isComboAvailable());
 
+  // Re-check combo availability every minute; auto-remove combos when window closes
   useEffect(() => {
-    setNowAvailable(isComboAvailable());
-    const id = window.setInterval(() => setNowAvailable(isComboAvailable()), 60_000);
+    const check = () => {
+      const avail = isComboAvailable();
+      setNowAvailable(avail);
+      lastAvailableRef.current = avail;
+    };
+    check();
+    const id = window.setInterval(check, 60_000);
     return () => window.clearInterval(id);
   }, []);
 
+  // We need setItems from context to auto-remove; use removeCombos instead
+  // Separate effect: when availability flips to false, auto-remove combos
   useEffect(() => {
-    if (isOpen) setNowAvailable(isComboAvailable());
-  }, [isOpen]);
+    if (!nowAvailable) {
+      const hasCombo = items.some((i) => i.type === 'combo');
+      if (hasCombo) {
+        removeCombos();
+        setComboRemovedMsg(true);
+      }
+    }
+  }, [nowAvailable, items, removeCombos]);
+
+  // Re-check on open
+  useEffect(() => {
+    if (isOpen) {
+      const avail = isComboAvailable();
+      setNowAvailable(avail);
+      if (!avail) {
+        const hasCombo = items.some((i) => i.type === 'combo');
+        if (hasCombo) {
+          removeCombos();
+          setComboRemovedMsg(true);
+        }
+      }
+    }
+  }, [isOpen, items, removeCombos]);
 
   const hasCombo = items.some((i) => i.type === 'combo');
   const comboBlocked = hasCombo && !nowAvailable;
@@ -83,6 +113,20 @@ export function Cart() {
           </button>
         </div>
 
+        {comboRemovedMsg && (
+          <div className="mx-4 mt-4 flex items-start gap-2 rounded-xl bg-amber-50 p-3 text-sm font-semibold text-amber-700">
+            <AlertTriangle size={18} className="mt-0.5 flex-shrink-0" />
+            {t.cart.comboRemoved}
+            <button
+              onClick={() => setComboRemovedMsg(false)}
+              className="ml-auto flex-shrink-0 text-amber-700 hover:text-amber-900"
+              aria-label={t.cart.close}
+            >
+              <X size={16} />
+            </button>
+          </div>
+        )}
+
         {items.length === 0 ? (
           <div className="flex flex-1 flex-col items-center justify-center gap-3 p-8 text-center">
             <ShoppingBag size={48} className="text-kissa-pink-light" />
@@ -141,13 +185,6 @@ export function Cart() {
                     </div>
                     <span className="text-xs text-kissa-olive">{item.price} ₸ × {item.qty}</span>
                   </div>
-
-                  {item.comboRestricted && !nowAvailable && (
-                    <div className="mt-2 flex items-start gap-1.5 rounded-xl bg-amber-50 p-2 text-xs font-semibold text-amber-700">
-                      <AlertTriangle size={14} className="mt-0.5 flex-shrink-0" />
-                      {t.cart.comboRestricted}
-                    </div>
-                  )}
                 </div>
               ))}
 
@@ -204,7 +241,7 @@ export function Cart() {
               )}
 
               <p className="mt-2 text-center text-xs text-kissa-olive">
-                {t.cart.note}
+                {t.cart.checkoutNote}
               </p>
             </div>
           </>

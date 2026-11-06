@@ -18,6 +18,7 @@ interface CartContextValue {
   count: number;
   addItem: (item: Omit<CartItem, 'qty'>, qty?: number) => void;
   removeItem: (key: string) => void;
+  removeCombos: () => void;
   changeQty: (key: string, delta: number) => void;
   clear: () => void;
   openCart: () => void;
@@ -94,6 +95,10 @@ export function CartProvider({ children }: { children: ReactNode }) {
     setItems((prev) => prev.filter((i) => i.key !== key));
   }, []);
 
+  const removeCombos = useCallback(() => {
+    setItems((prev) => prev.filter((i) => i.type !== 'combo'));
+  }, []);
+
   const changeQty = useCallback((key: string, delta: number) => {
     setItems((prev) =>
       prev
@@ -113,6 +118,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
       count: cartCount(items),
       addItem,
       removeItem,
+      removeCombos,
       changeQty,
       clear,
       openCart,
@@ -121,7 +127,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
       toast,
       bump,
     }),
-    [items, addItem, removeItem, changeQty, clear, openCart, closeCart, isOpen, toast, bump]
+    [items, addItem, removeItem, removeCombos, changeQty, clear, openCart, closeCart, isOpen, toast, bump]
   );
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;

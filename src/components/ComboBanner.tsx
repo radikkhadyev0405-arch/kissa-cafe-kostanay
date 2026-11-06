@@ -59,10 +59,15 @@ export function ComboBanner() {
                 {t.combo.chooseCombo}
               </button>
             ) : (
-              <div className="inline-flex items-center gap-2 rounded-full bg-gray-300 px-7 py-3.5 font-bold text-gray-600">
-                <AlertTriangle size={18} />
-                {t.combo.availableTimes}
-              </div>
+              <>
+                <div className="inline-flex cursor-not-allowed items-center gap-2 rounded-full bg-gray-300 px-7 py-3.5 font-bold text-gray-600">
+                  <AlertTriangle size={18} />
+                  {t.combo.chooseCombo}
+                </div>
+                <p className="flex items-center gap-1.5 text-sm font-semibold text-kissa-green/70">
+                  <Clock size={14} /> {t.combo.availableTimes}
+                </p>
+              </>
             )}
           </div>
         </div>

@@ -130,6 +130,7 @@ export interface Translation {
     comboWarning: string;
     comboBlocked: string;
     comboItemWarning: string;
+    comboRemoved: string;
     addedToCart: string;
     itemCount: (n: number) => string;
   };
@@ -286,6 +287,7 @@ export const translations: Record<Locale, Translation> = {
       comboWarning: 'Комбо доступно только с 8:00 до 12:00',
       comboBlocked: 'В корзине есть комбо, но сейчас оно недоступно. Удалите комбо, чтобы оформить заказ.',
       comboItemWarning: 'Комбо доступно только с 8:00 до 12:00',
+      comboRemoved: 'Комбо доступно только с 8:00 до 12:00, оно удалено из корзины',
       addedToCart: 'Добавлено в корзину',
       itemCount: (n: number) => `Корзина: ${n} позиций,`,
     },
@@ -426,6 +428,7 @@ export const translations: Record<Locale, Translation> = {
       comboWarning: 'Комбо тек 8:00-ден 12:00-ге дейін қолжетімді',
       comboBlocked: 'Себетте комбо бар, бірақ қазір қолжетімді емес. Тапсырыс беру үшін комбоны жойыңыз.',
       comboItemWarning: 'Комбо тек 8:00-ден 12:00-ге дейін қолжетімді',
+      comboRemoved: 'Комбо тек 8:00-ден 12:00-ге дейін қолжетімді, ол себеттен жойылды',
       addedToCart: 'Себетке қосылды',
       itemCount: (n: number) => `Себет: ${n} дана,`,
     },
@@ -566,6 +569,7 @@ export const translations: Record<Locale, Translation> = {
       comboWarning: 'Combo is only available from 8:00 to 12:00',
       comboBlocked: 'Your cart has a combo, but it is currently unavailable. Remove the combo to checkout.',
       comboItemWarning: 'Combo is only available from 8:00 to 12:00',
+      comboRemoved: 'Combo is only available from 8:00 to 12:00, it has been removed from your cart',
       addedToCart: 'Added to cart',
       itemCount: (n: number) => `Cart: ${n} items,`,
     },
