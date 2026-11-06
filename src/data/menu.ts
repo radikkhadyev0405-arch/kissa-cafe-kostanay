@@ -129,12 +129,12 @@ export const drinkCategories: DrinkCategory[] = [
     label: { ru: 'Кофе', kk: 'Кофе', en: 'Coffee' },
     volume: { ru: '350 мл', kk: '350 мл', en: '350 ml' },
     items: [
-      { id: 'americano', name: { ru: 'Американо', kk: 'Американо', en: 'Americano' }, price: 990, kcal: '2–5', image: '/images/latte.jpg' },
+      { id: 'americano', name: { ru: 'Американо', kk: 'Американо', en: 'Americano' }, price: 990, kcal: '2–5', image: '/images/americano.jpg' },
       { id: 'latte', name: { ru: 'Латте', kk: 'Латте', en: 'Latte' }, price: 1290, kcal: 145, image: '/images/latte.jpg' },
       { id: 'cappuccino', name: { ru: 'Капучино', kk: 'Капучино', en: 'Cappuccino' }, price: 1390, kcal: 145, image: '/images/cappuccino.jpg' },
-      { id: 'raf', name: { ru: 'Раф', kk: 'Раф', en: 'Raf' }, price: 1500, kcal: 330, image: '/images/cappuccino.jpg' },
-      { id: 'mocaccino', name: { ru: 'Мокачино', kk: 'Мокачино', en: 'Mocaccino' }, price: 1690, kcal: 331, image: '/images/cappuccino.jpg' },
-      { id: 'hot-chocolate', name: { ru: 'Горячий шоколад', kk: 'Ыстық шоколад', en: 'Hot chocolate' }, price: 1500, kcal: 331, image: '/images/cappuccino.jpg' },
+      { id: 'raf', name: { ru: 'Раф', kk: 'Раф', en: 'Raf' }, price: 1500, kcal: 330, image: '/images/raf.jpg' },
+      { id: 'mocaccino', name: { ru: 'Мокачино', kk: 'Мокачино', en: 'Mocaccino' }, price: 1690, kcal: 331, image: '/images/mocaccino.jpg' },
+      { id: 'hot-chocolate', name: { ru: 'Горячий шоколад', kk: 'Ыстық шоколад', en: 'Hot chocolate' }, price: 1500, kcal: 331, image: '/images/hot-chocolate.jpg' },
     ],
   },
   {
@@ -142,11 +142,11 @@ export const drinkCategories: DrinkCategory[] = [
     label: { ru: 'Холодные', kk: 'Салқын сусындар', en: 'Cold drinks' },
     volume: { ru: '500 мл', kk: '500 мл', en: '500 ml' },
     items: [
-      { id: 'matcha-tonic', name: { ru: 'Матча тоник', kk: 'Матча тоник', en: 'Matcha tonic' }, price: 1750, kcal: 100, image: '/images/matcha-latte.jpg' },
-      { id: 'espresso-tonic', name: { ru: 'Эспрессо-тоник', kk: 'Эспрессо-тоник', en: 'Espresso tonic' }, price: 1750, kcal: 60, image: '/images/latte.jpg' },
-      { id: 'ice-americano', name: { ru: 'Айс американо', kk: 'Айс американо', en: 'Iced americano' }, price: 1100, kcal: 15, image: '/images/latte.jpg' },
-      { id: 'ice-latte', name: { ru: 'Айс латте', kk: 'Айс латте', en: 'Iced latte' }, price: 1390, kcal: 174, image: '/images/latte.jpg' },
-      { id: 'ice-cappuccino', name: { ru: 'Айс капучино', kk: 'Айс капучино', en: 'Iced cappuccino' }, price: 1490, kcal: 174, image: '/images/cappuccino.jpg' },
+      { id: 'matcha-tonic', name: { ru: 'Матча тоник', kk: 'Матча тоник', en: 'Matcha tonic' }, price: 1750, kcal: 100, image: '/images/matcha-tonic.jpg' },
+      { id: 'espresso-tonic', name: { ru: 'Эспрессо-тоник', kk: 'Эспрессо-тоник', en: 'Espresso tonic' }, price: 1750, kcal: 60, image: '/images/espresso-tonic.jpg' },
+      { id: 'ice-americano', name: { ru: 'Айс американо', kk: 'Айс американо', en: 'Iced americano' }, price: 1100, kcal: 15, image: '/images/ice-americano.jpg' },
+      { id: 'ice-latte', name: { ru: 'Айс латте', kk: 'Айс латте', en: 'Iced latte' }, price: 1390, kcal: 174, image: '/images/ice-latte.jpg' },
+      { id: 'ice-cappuccino', name: { ru: 'Айс капучино', kk: 'Айс капучино', en: 'Iced cappuccino' }, price: 1490, kcal: 174, image: '/images/ice-cappuccino.jpg' },
     ],
   },
   {
@@ -164,9 +164,9 @@ export const drinkCategories: DrinkCategory[] = [
     label: { ru: 'Чай', kk: 'Шай', en: 'Tea' },
     volume: { ru: '350 мл', kk: '350 мл', en: '350 ml' },
     items: [
-      { id: 'tea-raspberry-lemon', name: { ru: 'Малина-лимон', kk: 'Таңқурай-лимон', en: 'Raspberry-lemon' }, price: 990, kcal: 98, image: null },
-      { id: 'tea-orange-ginger', name: { ru: 'Апельсин-имбирь', kk: 'Апельсин-зімбір', en: 'Orange-ginger' }, price: 990, kcal: 53, image: null },
-      { id: 'tea-sea-buckthorn', name: { ru: 'Облепиха-маракуйя', kk: 'Шырғанақ-маракуйя', en: 'Sea buckthorn-passion fruit' }, price: 990, kcal: 53, image: null },
+      { id: 'tea-raspberry-lemon', name: { ru: 'Малина-лимон', kk: 'Таңқурай-лимон', en: 'Raspberry-lemon' }, price: 990, kcal: 98, image: '/images/tea-raspberry-lemon.jpg' },
+      { id: 'tea-orange-ginger', name: { ru: 'Апельсин-имбирь', kk: 'Апельсин-зімбір', en: 'Orange-ginger' }, price: 990, kcal: 53, image: '/images/tea-orange-ginger.jpg' },
+      { id: 'tea-sea-buckthorn', name: { ru: 'Облепиха-маракуйя', kk: 'Шырғанақ-маракуйя', en: 'Sea buckthorn-passion fruit' }, price: 990, kcal: 53, image: '/images/tea-sea-buckthorn.jpg' },
     ],
   },
 ];
@@ -202,7 +202,7 @@ export const bowlBuilder: BowlBuilderData = {
 };
 
 export const sandwiches: Sandwich[] = [
-  { id: 'sandwich-spicy-tuna', name: { ru: 'Острый тунец', kk: 'Ыстық тунец', en: 'Spicy tuna' }, price: 1900, image: '/images/sandwich-tuna.jpg', tag: 'spicy', macros: { kcal: 275.1, protein: 18, fat: 7, carbs: 44 } },
-  { id: 'sandwich-classic-tuna', name: { ru: 'Классический тунец', kk: 'Классикалық тунец', en: 'Classic tuna' }, price: 1900, image: '/images/sandwich-tuna.jpg', tag: 'hit', macros: { kcal: 277.7, protein: 18.5, fat: 7, carbs: 47 } },
+  { id: 'sandwich-spicy-tuna', name: { ru: 'Острый тунец', kk: 'Ыстық тунец', en: 'Spicy tuna' }, price: 1900, image: '/images/sandwich-spicy-tuna.jpg', tag: 'spicy', macros: { kcal: 275.1, protein: 18, fat: 7, carbs: 44 } },
+  { id: 'sandwich-classic-tuna', name: { ru: 'Классический тунец', kk: 'Классикалық тунец', en: 'Classic tuna' }, price: 1900, image: '/images/sandwich-classic-tuna.jpg', tag: 'hit', macros: { kcal: 277.7, protein: 18.5, fat: 7, carbs: 47 } },
   { id: 'sandwich-chicken', name: { ru: 'С курицей', kk: 'Тауық етімен', en: 'With chicken' }, price: 1900, image: '/images/sandwich-chicken.jpg', tag: 'classic', macros: { kcal: 393.9, protein: 23.85, fat: 7.5, carbs: 44.1 } },
 ];
