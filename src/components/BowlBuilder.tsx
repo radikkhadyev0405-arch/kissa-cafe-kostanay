@@ -31,7 +31,6 @@ export function BowlBuilder() {
   const bowlDetails = useMemo((): LocalizedText => {
     const build = (lang: 'ru' | 'kk' | 'en'): string => {
       const parts: string[] = [];
-      parts.push(`рис белый отварной 150 г`);
       if (base) parts.push(base.name[lang].toLowerCase());
       selectedFillers.forEach((f) => parts.push(f.name[lang].toLowerCase()));
       if (sauce) parts.push(sauce.name[lang].toLowerCase());
@@ -109,10 +108,14 @@ export function BowlBuilder() {
                   />
                   <div className="flex-1">
                     <p className="font-display text-base font-extrabold text-kissa-green sm:text-lg">{loc(b.name, locale)}</p>
+                    <p className="mt-0.5 text-xs font-semibold text-kissa-olive">{t.bowl.withRice}</p>
                     <p className="mt-1 font-display text-xl font-black text-kissa-pink">{b.price} ₸</p>
-                    {b.macros && (
-                      <p className="mt-0.5 text-xs font-semibold text-kissa-olive">{formatMacros(b.macros, locale)}</p>
-                    )}
+                    {b.macros && (() => {
+                      const combined = sumMacros([bowlBuilder.rice.macros, b.macros]);
+                      return combined ? (
+                        <p className="mt-0.5 text-xs font-semibold text-kissa-olive">{formatMacros(combined, locale)}</p>
+                      ) : null;
+                    })()}
                   </div>
                   {selected && (
                     <span className="absolute right-3 top-3 flex h-7 w-7 items-center justify-center rounded-full bg-kissa-pink text-white animate-pop">
@@ -246,20 +249,9 @@ export function BowlBuilder() {
         <div className="mt-8 rounded-kissa-lg bg-white p-5 shadow-kissa-lg sm:p-6">
           <h3 className="font-display text-lg font-extrabold uppercase text-kissa-green">{t.bowl.yourBowl}</h3>
           {!base ? (
-            <div className="mt-3 space-y-1.5 text-sm sm:text-base">
-              <p className="text-kissa-green"><span className="font-bold">{t.bowl.rice}</span> {loc(bowlBuilder.rice.name, locale)}, {loc(bowlBuilder.rice.weight, locale)}</p>
-              {bowlMacros && (
-                <div className="mt-2 rounded-xl bg-kissa-pink-light px-3 py-2">
-                  <p className="text-xs font-bold text-kissa-green">
-                    {t.bowl.approx} {formatMacros(bowlMacros, locale)}
-                  </p>
-                  <p className="mt-0.5 text-[10px] text-kissa-olive">{t.bowl.withoutToppingNote}</p>
-                </div>
-              )}
-            </div>
+            <p className="mt-3 text-sm text-kissa-green/60">{t.bowl.chooseBase}</p>
           ) : (
             <div className="mt-3 space-y-1.5 text-sm sm:text-base">
-              <p className="text-kissa-green"><span className="font-bold">{t.bowl.rice}</span> {loc(bowlBuilder.rice.name, locale)}, {loc(bowlBuilder.rice.weight, locale)}</p>
               <p className="text-kissa-green"><span className="font-bold">{t.bowl.base}</span> {loc(base.name, locale)}</p>
               {selectedFillers.length > 0 ? (
                 <p className="text-kissa-green"><span className="font-bold">{t.bowl.fillers}</span> {selectedFillers.map((f) => loc(f.name, locale)).join(', ')}</p>
