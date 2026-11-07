@@ -108,14 +108,15 @@ export function BowlBuilder() {
                   />
                   <div className="flex-1">
                     <p className="font-display text-base font-extrabold text-kissa-green sm:text-lg">{loc(b.name, locale)}</p>
-                    <p className="mt-0.5 text-xs font-semibold text-kissa-olive">{t.bowl.withRice}</p>
                     <p className="mt-1 font-display text-xl font-black text-kissa-pink">{b.price} ₸</p>
-                    {b.macros && (() => {
-                      const combined = sumMacros([bowlBuilder.rice.macros, b.macros]);
-                      return combined ? (
-                        <p className="mt-0.5 text-xs font-semibold text-kissa-olive">{formatMacros(combined, locale)}</p>
-                      ) : null;
-                    })()}
+                    <p className="mt-0.5 text-xs font-semibold text-kissa-olive">
+                      {t.bowl.riceLabel}: {formatMacros(bowlBuilder.rice.macros, locale)}
+                    </p>
+                    {b.macros && (
+                      <p className="mt-0.5 text-xs font-semibold text-kissa-olive">
+                        {b.id === 'chicken' ? t.bowl.baseShortChicken : t.bowl.baseShortShrimp}: {formatMacros(b.macros, locale)}
+                      </p>
+                    )}
                   </div>
                   {selected && (
                     <span className="absolute right-3 top-3 flex h-7 w-7 items-center justify-center rounded-full bg-kissa-pink text-white animate-pop">
