@@ -79,6 +79,7 @@ export interface Translation {
     noFillers: string;
     sauce: string;
     topping: string;
+    rice: string;
     withToppingShort: string;
     withoutToppingShort: string;
     approx: string;
@@ -240,6 +241,7 @@ export const translations: Record<Locale, Translation> = {
       noFillers: 'не выбраны',
       sauce: 'Соус:',
       topping: 'Посыпка:',
+      rice: 'Рис:',
       withToppingShort: 'с посыпкой',
       withoutToppingShort: 'без посыпки',
       approx: 'Примерно:',
@@ -381,6 +383,7 @@ export const translations: Record<Locale, Translation> = {
       noFillers: 'таңдалмады',
       sauce: 'Тұздық:',
       topping: 'Себу:',
+      rice: 'Күріш:',
       withToppingShort: 'себумен',
       withoutToppingShort: 'себусіз',
       approx: 'Шамамен:',
@@ -522,6 +525,7 @@ export const translations: Record<Locale, Translation> = {
       noFillers: 'none selected',
       sauce: 'Sauce:',
       topping: 'Sprinkle:',
+      rice: 'Rice:',
       withToppingShort: 'with sprinkle',
       withoutToppingShort: 'no sprinkle',
       approx: 'Approx:',

@@ -65,10 +65,17 @@ export interface BowlSauce {
   macros?: Macros;
 }
 
+export interface BowlRice {
+  name: LocalizedText;
+  weight: LocalizedText;
+  macros: Macros;
+}
+
 export interface BowlBuilderData {
   bases: BowlBase[];
   fillers: BowlFiller[];
   sauces: BowlSauce[];
+  rice: BowlRice;
   topping: LocalizedText;
 }
 
@@ -178,26 +185,31 @@ export const bowlBuilder: BowlBuilderData = {
   ],
   fillers: [
     { id: 'chickpea', name: { ru: 'Криспи нут', kk: 'Криспи ноқат', en: 'Crispy chickpea' }, macros: { kcal: 48, protein: 3, fat: 0.9, carbs: 7 } },
-    { id: 'cucumber', name: { ru: 'Огурцы', kk: 'Қияр', en: 'Cucumber' }, macros: { kcal: 4, protein: 0.2, fat: 0.08, carbs: 0 } },
-    { id: 'cabbage', name: { ru: 'Красная капуста', kk: 'Қызыл қырыққабат', en: 'Red cabbage' }, macros: { kcal: 8, protein: 0.2, fat: 0.1, carbs: 1.5 } },
-    { id: 'cherry', name: { ru: 'Помидоры черри', kk: 'Черри қызанағы', en: 'Cherry tomatoes' }, macros: { kcal: 10.5, protein: 0.72, fat: 0.11, carbs: 2.15 } },
-    { id: 'broccoli', name: { ru: 'Брокколи', kk: 'Брокколи', en: 'Broccoli' }, macros: { kcal: 5, protein: 0.3, fat: 0, carbs: 1 } },
-    { id: 'cauliflower', name: { ru: 'Цветная капуста', kk: 'Гүлді қырыққабат', en: 'Cauliflower' }, macros: { kcal: 9, protein: 0.75, fat: 0.09, carbs: 1.62 } },
+    { id: 'cherry', name: { ru: 'Помидоры черри', kk: 'Черри қызанағы', en: 'Cherry tomatoes' }, macros: { kcal: 5, protein: 0.3, fat: 0, carbs: 1 } },
     { id: 'corn', name: { ru: 'Кукуруза', kk: 'Жүгері', en: 'Corn' }, macros: { kcal: 17.4, protein: 0.66, fat: 0.12, carbs: 3.36 } },
+    { id: 'cucumber', name: { ru: 'Огурцы', kk: 'Қияр', en: 'Cucumber' }, macros: { kcal: 4, protein: 0.2, fat: 0.08, carbs: 0 } },
+    { id: 'broccoli', name: { ru: 'Брокколи', kk: 'Брокколи', en: 'Broccoli' }, macros: { kcal: 10.5, protein: 0.72, fat: 0.11, carbs: 2.15 } },
     { id: 'enoki', name: { ru: 'Грибы эноки', kk: 'Эноки саңырауқұлағы', en: 'Enoki mushrooms' }, macros: { kcal: 15, protein: 0.8, fat: 0.1, carbs: 2 } },
+    { id: 'cabbage', name: { ru: 'Красная капуста', kk: 'Қызыл қырыққабат', en: 'Red cabbage' }, macros: { kcal: 8, protein: 0.2, fat: 0.1, carbs: 1.5 } },
+    { id: 'cauliflower', name: { ru: 'Цветная капуста', kk: 'Гүлді қырыққабат', en: 'Cauliflower' }, macros: { kcal: 9, protein: 0.75, fat: 0.09, carbs: 1.62 } },
     { id: 'quail-eggs', name: { ru: 'Перепелиные яйца', kk: 'Бөдене жұмыртқасы', en: 'Quail eggs' }, macros: { kcal: 39, protein: 3.4, fat: 2.7, carbs: 0.45 } },
     { id: 'sweet-potato', name: { ru: 'Батат', kk: 'Тәтті картоп', en: 'Sweet potato' } },
     { id: 'edamame', name: { ru: 'Бобы эдамаме', kk: 'Эдамаме бұршағы', en: 'Edamame beans' } },
     { id: 'pepper', name: { ru: 'Перец', kk: 'Бұрыш', en: 'Bell pepper' } },
   ],
   sauces: [
-    { id: 'nut', name: { ru: 'Ореховый', kk: 'Жаңғақты', en: 'Nut' }, allergen: { ru: 'содержит орехи', kk: 'жаңғақ бар', en: 'contains nuts' }, macros: { kcal: 83, protein: 1, fat: 8, carbs: 1 } },
-    { id: 'chili', name: { ru: 'Сладкий чили', kk: 'Тәтті чили', en: 'Sweet chili' }, macros: { kcal: 39, protein: 0.1, fat: 0.1, carbs: 9.4 } },
-    { id: 'teriyaki', name: { ru: 'Терияки', kk: 'Терияки', en: 'Teriyaki' }, macros: { kcal: 36, protein: 0, fat: 0, carbs: 9 } },
-    { id: 'wasabi', name: { ru: 'Мусс васаби', kk: 'Васаби муссы', en: 'Wasabi mousse' }, macros: { kcal: 51, protein: 0.7, fat: 5, carbs: 1 } },
     { id: 'honey-mustard', name: { ru: 'Медово-горчичный', kk: 'Бал-қыша', en: 'Honey mustard' }, macros: { kcal: 75, protein: 0.3, fat: 7, carbs: 3.5 } },
+    { id: 'nut', name: { ru: 'Ореховый', kk: 'Жаңғақты', en: 'Nut' }, allergen: { ru: 'содержит орехи', kk: 'жаңғақ бар', en: 'contains nuts' }, macros: { kcal: 83, protein: 1, fat: 8, carbs: 1 } },
+    { id: 'wasabi', name: { ru: 'Мусс васаби', kk: 'Васаби муссы', en: 'Wasabi mousse' }, macros: { kcal: 51, protein: 0.7, fat: 5, carbs: 1 } },
+    { id: 'teriyaki', name: { ru: 'Терияки', kk: 'Терияки', en: 'Teriyaki' }, macros: { kcal: 36, protein: 0, fat: 0, carbs: 9 } },
+    { id: 'chili', name: { ru: 'Сладкий чили', kk: 'Тәтті чили', en: 'Sweet chili' }, macros: { kcal: 39, protein: 0.1, fat: 0.1, carbs: 9.4 } },
     { id: 'soy', name: { ru: 'Соевый', kk: 'Соустық', en: 'Soy' }, macros: { kcal: 10, protein: 1.2, fat: 0, carbs: 2 } },
   ],
+  rice: {
+    name: { ru: 'Рис белый отварной', kk: 'Ақ күріш (қайнатылған)', en: 'Boiled white rice' },
+    weight: { ru: '150 г', kk: '150 г', en: '150 g' },
+    macros: { kcal: 195, protein: 4, fat: 0.5, carbs: 42 },
+  },
   topping: { ru: 'Посыпка из смеси орехов и семян', kk: 'Жаңғақ пен тұқым қоспасынан себу', en: 'Nut & seed sprinkle' },
 };
 

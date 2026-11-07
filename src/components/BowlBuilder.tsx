@@ -31,6 +31,7 @@ export function BowlBuilder() {
   const bowlDetails = useMemo((): LocalizedText => {
     const build = (lang: 'ru' | 'kk' | 'en'): string => {
       const parts: string[] = [];
+      parts.push(`рис белый отварной 150 г`);
       if (base) parts.push(base.name[lang].toLowerCase());
       selectedFillers.forEach((f) => parts.push(f.name[lang].toLowerCase()));
       if (sauce) parts.push(sauce.name[lang].toLowerCase());
@@ -41,8 +42,12 @@ export function BowlBuilder() {
   }, [base, selectedFillers, sauce, withTopping, t]);
 
   const bowlMacros = useMemo(() => {
-    if (!base) return null;
-    const items = [base.macros, ...selectedFillers.map((f) => f.macros), sauce?.macros];
+    const items = [bowlBuilder.rice.macros];
+    if (base) items.push(base.macros);
+    selectedFillers.forEach((f) => {
+      if (f.macros) items.push(f.macros);
+    });
+    if (sauce?.macros) items.push(sauce.macros);
     return sumMacros(items);
   }, [base, selectedFillers, sauce]);
 
@@ -241,9 +246,20 @@ export function BowlBuilder() {
         <div className="mt-8 rounded-kissa-lg bg-white p-5 shadow-kissa-lg sm:p-6">
           <h3 className="font-display text-lg font-extrabold uppercase text-kissa-green">{t.bowl.yourBowl}</h3>
           {!base ? (
-            <p className="mt-3 text-sm text-kissa-green/60">{t.bowl.chooseBase}</p>
+            <div className="mt-3 space-y-1.5 text-sm sm:text-base">
+              <p className="text-kissa-green"><span className="font-bold">{t.bowl.rice}</span> {loc(bowlBuilder.rice.name, locale)}, {loc(bowlBuilder.rice.weight, locale)}</p>
+              {bowlMacros && (
+                <div className="mt-2 rounded-xl bg-kissa-pink-light px-3 py-2">
+                  <p className="text-xs font-bold text-kissa-green">
+                    {t.bowl.approx} {formatMacros(bowlMacros, locale)}
+                  </p>
+                  <p className="mt-0.5 text-[10px] text-kissa-olive">{t.bowl.withoutToppingNote}</p>
+                </div>
+              )}
+            </div>
           ) : (
             <div className="mt-3 space-y-1.5 text-sm sm:text-base">
+              <p className="text-kissa-green"><span className="font-bold">{t.bowl.rice}</span> {loc(bowlBuilder.rice.name, locale)}, {loc(bowlBuilder.rice.weight, locale)}</p>
               <p className="text-kissa-green"><span className="font-bold">{t.bowl.base}</span> {loc(base.name, locale)}</p>
               {selectedFillers.length > 0 ? (
                 <p className="text-kissa-green"><span className="font-bold">{t.bowl.fillers}</span> {selectedFillers.map((f) => loc(f.name, locale)).join(', ')}</p>
